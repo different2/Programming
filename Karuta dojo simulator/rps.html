@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karuta Dojo Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+   
+</head>
+<body>
+    <h1>Karuta Dojo Simulator</h1>
+    <form id="gameForm">
+        <label for="player1Choice">Player 1:</label>
+        <select id="player1Choice">
+            <option value="punch">punch</option>
+            <option value="block">block</option>
+
+        </select>
+
+        <label for="player2Choice">Player 2:</label>
+        <select id="player2Choice">
+            <option value="punch">punch</option>
+            <option value="block">block</option>
+        </select>
+
+        <button type="button" onclick="playGame()">Play</button>
+    </form>
+    <form>
+        <input type="checkbox" id="vigor">
+        <label for="vigor">vigor</label>
+    </form>
+
+    <div id="result"></div>
+    <div id="turnCounter">Turn Counter: <span id="turnCount">0</span></div>
+    <div id="energyCounter">energy: <span id="energyCount">1</span></div>
+      <!-- Health Bar -->
+    Player 1
+      <div class="health-bar">
+        <div class="health" id="player1Health" style="width: 100%;"></div>
+        <span class="health-number" id="player1HealthText">100</span>
+    </div>
+    Player 2
+    <div class="health-bar">
+        <div class="health" id="player2Health" style="width: 100%;"></div>
+        <span class="health-number" id="player2HealthText">100</span>
+    </div>
+    <!-- Link the JavaScript file -->
+    <script src="rps.js"></script>
+</body>
+</html>
