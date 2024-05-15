@@ -50,17 +50,28 @@ function updateEnergyCounter() {
 
 // Function to determine the winner and apply damage
 function determineWinner(player1Choice, player2Choice) {
-    if (player1Choice === player2Choice) {
+    if (player1Choice === "punch" && player2Choice === "punch") {
+        updateHealth("player2", -12), updateHealth("player1", -12)
         return "It's a tie!";
-    } else if ((player1Choice === "punch" && player2Choice === "block") || 
-               (player1Choice === "block" && player2Choice === "punch")) {
-        // Apply damage to the appropriate player's health bar
-        updateHealth((player1Choice === "punch") ? "player2" : "player1", -12); 
-        return "Punch breaks through block! " + ((player1Choice === "punch") ? "Player 1" : "Player 2") + " wins!";
+    } else if (player1Choice === "punch" && player2Choice === "block") {
+        // Player 2 blocks the punch, reduce damage by 9
+        updateHealth("player2", -3); // Decrease health by 9 when blocking
+        return "Player 2 blocks the punch and takes reduced damage!";
+    } else if (player2Choice === "punch" && player1Choice === "block") {
+        // Player 1 blocks the punch, reduce damage by 9
+        updateHealth("player1", -3); // Decrease health by 9 when blocking
+        return "Player 1 blocks the punch and takes reduced damage!";
+    } else if (player1Choice === "punch") {
+        // Apply full damage to player 2
+        updateHealth("player2", -12); // Decrease health by 12 for each punch
+        return "Player 1 punches! Player 2 takes 12 damage!";
+    } else if (player2Choice === "punch") {
+        // Apply full damage to player 1
+        updateHealth("player1", -12); // Decrease health by 12 for each punch
+        return "Player 2 punches! Player 1 takes 12 damage!";
     } else {
-        // The other player wins, no damage is applied
-        updateHealth((player1Choice === "block") ? "player2" : "player1", +10);
-        return "Player " + ((player1Choice === "punch") ? "2" : "1") + " wins!";
+        // Neither player chooses punch, no damage is applied
+        return "No damage is done.";
     }
 }
 
