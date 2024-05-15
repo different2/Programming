@@ -18,12 +18,10 @@ function playGame() {
     // Update energy counter
     updateEnergyCounter();
     
-    // Update health bars
-    updateHealthBars(player1Choice, player2Choice);
-    
     // Check if any player's health has reached zero
     var player1Health = parseInt(document.getElementById("player1Health").style.width);
     var player2Health = parseInt(document.getElementById("player2Health").style.width);
+    console.log("Player 1 Health: " + player1Health + ", Player 2 Health: " + player2Health);
     if (player1Health <= 0) {
         document.getElementById("result").innerHTML = "Player 2 wins! Player 1's health reached zero.";
     } else if (player2Health <= 0) {
@@ -78,7 +76,7 @@ function updateHealth(player, healthChange) {
     var newHealth = currentHealth + healthChange;
 
     // Ensure health stays within 0-100 range
-    newHealth = Math.max(0, Math.min(100, newHealth));
+    newHealth = Math.max(0, Math.min(150, newHealth));
 
     // Update health bar width
     healthBar.style.width = newHealth + "%";
