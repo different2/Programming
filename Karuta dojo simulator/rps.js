@@ -59,7 +59,7 @@ function determineWinner(player1Choice, player2Choice) {
         return "Punch breaks through block! " + ((player1Choice === "punch") ? "Player 1" : "Player 2") + " wins!";
     } else {
         // The other player wins, no damage is applied
-        updateHealth((player1Choice === "block") ? "player2" : "player1", -10);
+        updateHealth((player1Choice === "block") ? "player2" : "player1", +10);
         return "Player " + ((player1Choice === "punch") ? "2" : "1") + " wins!";
     }
 }
@@ -75,11 +75,8 @@ function updateHealth(player, healthChange) {
     // Calculate new health value
     var newHealth = currentHealth + healthChange;
 
-    // Ensure health stays within 0-150 range
-    newHealth = Math.max(0, Math.min(150, newHealth));
-
     // Calculate the width of the health bar based on the new health value
-    var healthBarWidth = (newHealth / 150) * 150; // Assuming total health is 150 and health bar width is 300px
+    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 300px
 
     // Update health text
     healthText.textContent = newHealth;
