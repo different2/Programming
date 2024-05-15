@@ -1,5 +1,5 @@
         .health-bar {
-            width: 200px; /* Adjust width as needed */
+            width: 150px; /* Adjust width as needed */
             height: 20px; /* Adjust height as needed */
             border: 1px solid #000;
             background-color: #f0f0f0;
@@ -9,6 +9,8 @@
 
         .health {
             height: 100%;
+            width: 150%; /* Adjusted width for 150 health points */
+            max-width: 100%; /* Limit width to 100% of parent (.health-bar) */
             background-color: #4caf50; /* Adjust color for healthy state */
         }
          /* Style for the health bar numbers */

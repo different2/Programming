@@ -55,11 +55,11 @@ function determineWinner(player1Choice, player2Choice) {
     } else if ((player1Choice === "punch" && player2Choice === "block") || 
                (player1Choice === "block" && player2Choice === "punch")) {
         // Apply damage to the appropriate player's health bar
-        updateHealth((player1Choice === "punch") ? "player2" : "player1", -10); // Decrease health by 10%
+        updateHealth((player1Choice === "punch") ? "player2" : "player1", -12); 
         return "Punch breaks through block! " + ((player1Choice === "punch") ? "Player 1" : "Player 2") + " wins!";
     } else {
         // The other player wins, no damage is applied
-        updateHealth((player1Choice === "block") ? "player2" : "player1", -10); // Decrease health by 10%
+        updateHealth((player1Choice === "block") ? "player2" : "player1", -10);
         return "Player " + ((player1Choice === "punch") ? "2" : "1") + " wins!";
     }
 }
@@ -69,18 +69,22 @@ function updateHealth(player, healthChange) {
     var healthBar = document.getElementById(player + "Health");
     var healthText = document.getElementById(player + "HealthText");
 
-    // Get current health percentage
-    var currentHealth = parseInt(healthBar.style.width);
+    // Get current health value
+    var currentHealth = parseInt(healthText.textContent);
 
-    // Calculate new health percentage
+    // Calculate new health value
     var newHealth = currentHealth + healthChange;
 
-    // Ensure health stays within 0-100 range
+    // Ensure health stays within 0-150 range
     newHealth = Math.max(0, Math.min(150, newHealth));
 
-    // Update health bar width
-    healthBar.style.width = newHealth + "%";
+    // Calculate the width of the health bar based on the new health value
+    var healthBarWidth = (newHealth / 150) * 150; // Assuming total health is 150 and health bar width is 300px
 
     // Update health text
-    healthText.textContent = newHealth + "%";
+    healthText.textContent = newHealth;
+
+    // Update health bar width
+    healthBar.style.width = healthBarWidth + "px";
+
 }
