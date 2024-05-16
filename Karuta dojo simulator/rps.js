@@ -1,14 +1,48 @@
 // Global variables for turn and energy counters
+var player1PunchCount = 0;
+var player2PunchCount = 0;
 var turnCount = 0;
 var energyCount = 1;
 
-// Function to play the game
+function usePlayer1() {
+    // Check if player 1 has reached the maximum number of punch actions
+    if (player1PunchCount < 3) {
+        // Increment player 1's punch count
+        player1PunchCount++;
+        // Get player choices
+        var player1Choice = document.getElementById("player1Choice").value;
+
+         // Determine the winner and display result
+         var result = determineDamage(player1Choice, "punch");
+        document.getElementById("result").innerHTML = result;
+
+        if (player1PunchCount === 3) {
+        document.getElementById("useButtonPlayer1").disabled = true;
+        }
+    }
+}
+function usePlayer2() {
+    // Check if player 2 has reached the maximum number of punch actions
+    if (player2PunchCount < 3) {
+        // Increment player 2's punch count
+        player2PunchCount++;
+        
+        var player2Choice = document.getElementById("player2Choice").value;
+        var result = determineDamage("punch", player2Choice);
+    document.getElementById("result").innerHTML = result;
+     // Disable the "Use" button for player 2 if the maximum limit is reached
+        if (player2PunchCount === 3) {
+        document.getElementById("useButtonPlayer2").disabled = true;
+        }
+    }
+}
 function endTurn() {
     // Increment turn counter
     updateTurnCounter();
     
     // Update energy counter
     updateEnergyCounter();
+
     // Check if any player's health has reached zero
     var player1Health = parseInt(document.getElementById("player1HealthText").textContent);
     var player2Health = parseInt(document.getElementById("player2HealthText").textContent);
@@ -18,21 +52,15 @@ function endTurn() {
     } else if (player2Health <= 0) {
         document.getElementById("result").innerHTML = "Player 1 wins! Player 2's health reached zero.";
     }
-}
- function usePlayer1() {
-    // Get player choices
-    var player1Choice = document.getElementById("player1Choice").value;
+         // Reset punch counts for both players
+         player1PunchCount = 0;
+         player2PunchCount = 0;
+           // Enable the "Use" buttons for both players
+    document.getElementById("useButtonPlayer1").disabled = false;
+    document.getElementById("useButtonPlayer2").disabled = false;
 
-    // Determine the winner and display result
-    var result = determineDamage(player1Choice, player2Choice);
-    document.getElementById("result").innerHTML = result;
-    
 }
-function usePlayer2() {
-    var player2Choice = document.getElementById("player2Choice").value;
-    var result = determineDamage(player1Choice, player2Choice);
-    document.getElementById("result").innerHTML = result;
-}
+
 // Function to update turn counter
 function updateTurnCounter() {
     turnCount += 1;
