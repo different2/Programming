@@ -3,24 +3,15 @@ var turnCount = 0;
 var energyCount = 1;
 
 // Function to play the game
-function playGame() {
+function endTurn() {
     // Increment turn counter
     updateTurnCounter();
     
-    // Get player choices
-    var player1Choice = document.getElementById("player1Choice").value;
-    var player2Choice = document.getElementById("player2Choice").value;
-    
-    // Determine the winner and display result
-    var result = determineWinner(player1Choice, player2Choice);
-    document.getElementById("result").innerHTML = result;
-    
     // Update energy counter
     updateEnergyCounter();
-    
     // Check if any player's health has reached zero
-    var player1Health = parseInt(document.getElementById("player1Health").style.width);
-    var player2Health = parseInt(document.getElementById("player2Health").style.width);
+    var player1Health = parseInt(document.getElementById("player1HealthText").textContent);
+    var player2Health = parseInt(document.getElementById("player2HealthText").textContent);
     console.log("Player 1 Health: " + player1Health + ", Player 2 Health: " + player2Health);
     if (player1Health <= 0) {
         document.getElementById("result").innerHTML = "Player 2 wins! Player 1's health reached zero.";
@@ -28,7 +19,20 @@ function playGame() {
         document.getElementById("result").innerHTML = "Player 1 wins! Player 2's health reached zero.";
     }
 }
+ function usePlayer1() {
+    // Get player choices
+    var player1Choice = document.getElementById("player1Choice").value;
 
+    // Determine the winner and display result
+    var result = determineDamage(player1Choice, player2Choice);
+    document.getElementById("result").innerHTML = result;
+    
+}
+function usePlayer2() {
+    var player2Choice = document.getElementById("player2Choice").value;
+    var result = determineDamage(player1Choice, player2Choice);
+    document.getElementById("result").innerHTML = result;
+}
 // Function to update turn counter
 function updateTurnCounter() {
     turnCount += 1;
@@ -48,29 +52,15 @@ function updateEnergyCounter() {
     document.getElementById("energyCount").textContent = roundedEnergyCount;
 }
 
-// Function to determine the winner and apply damage
-function determineWinner(player1Choice, player2Choice) {
-    if (player1Choice === "punch" && player2Choice === "punch") {
-        updateHealth("player2", -12), updateHealth("player1", -12)
-        return "It's a tie!";
-    } else if (player1Choice === "punch" && player2Choice === "block") {
-        // Player 2 blocks the punch, reduce damage by 9
-        updateHealth("player2", -3); // Decrease health by 9 when blocking
-        return "Player 2 blocks the punch and takes reduced damage!";
-    } else if (player2Choice === "punch" && player1Choice === "block") {
-        // Player 1 blocks the punch, reduce damage by 9
-        updateHealth("player1", -3); // Decrease health by 9 when blocking
-        return "Player 1 blocks the punch and takes reduced damage!";
-    } else if (player1Choice === "punch") {
-        // Apply full damage to player 2
-        updateHealth("player2", -12); // Decrease health by 12 for each punch
-        return "Player 1 punches! Player 2 takes 12 damage!";
+// Function to apply damage
+function determineDamage(player1Choice, player2Choice) {
+    if (player1Choice === "punch") {
+        updateHealth("player2", -12);
+        return "player1 used punch!";
     } else if (player2Choice === "punch") {
-        // Apply full damage to player 1
-        updateHealth("player1", -12); // Decrease health by 12 for each punch
-        return "Player 2 punches! Player 1 takes 12 damage!";
+        updateHealth("player1", -12);
+        return "Player 2 used punch!";
     } else {
-        // Neither player chooses punch, no damage is applied
         return "No damage is done.";
     }
 }

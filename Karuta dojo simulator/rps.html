@@ -13,20 +13,22 @@
         <label for="player1Choice">Player 1:</label>
         <select id="player1Choice">
             <option value=""> </option>
-            <option value="punch">punch</option>
-            <option value="block">block</option>
-
+            <option value="punch">Punch</option>
+            <option value="block">Block</option>
         </select>
-
+        <button type="button" onclick="usePlayer1()">Use</button>
+    
         <label for="player2Choice">Player 2:</label>
         <select id="player2Choice">
             <option value=""> </option>
-            <option value="punch">punch</option>
-            <option value="block">block</option>
+            <option value="punch">Punch</option>
+            <option value="block">Block</option>
         </select>
-
-        <button type="button" onclick="playGame()">Play</button>
+        <button type="button" onclick="usePlayer2()">Use</button>
+    
+        <button type="button" onclick="endTurn()">End Turn</button>
     </form>
+    
     <form>
         <input type="checkbox" id="vigor">
         <label for="vigor">vigor</label>
