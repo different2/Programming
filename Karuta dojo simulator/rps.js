@@ -13,7 +13,7 @@ function usePlayer1() {
         var player1Choice = document.getElementById("player1Choice").value;
 
          // Determine the winner and display result
-         var result = determineDamage(player1Choice, "punch");
+         var result = determineDamage(player1Choice, player2Choice);
         document.getElementById("result").innerHTML = result;
 
         if (player1PunchCount === 3) {
@@ -28,13 +28,47 @@ function usePlayer2() {
         player2PunchCount++;
         
         var player2Choice = document.getElementById("player2Choice").value;
-        var result = determineDamage("punch", player2Choice);
+        var result = determineDamage(player1Choice, player2Choice);
     document.getElementById("result").innerHTML = result;
      // Disable the "Use" button for player 2 if the maximum limit is reached
         if (player2PunchCount === 3) {
         document.getElementById("useButtonPlayer2").disabled = true;
         }
     }
+}
+// Function to apply damage
+function determineDamage(player1Choice, player2Choice) {
+    if (player1Choice === "punch") {
+        updateHealth("player2", -12);
+        return "player1 used punch!";
+    } else if (player2Choice === "punch") {
+        updateHealth("player1", -12);
+        return "Player 2 used punch!";
+    } else {
+        return "No damage is done.";
+    }
+}
+
+// Function to update health bars and their text
+function updateHealth(player, healthChange) {
+    var healthBar = document.getElementById(player + "Health");
+    var healthText = document.getElementById(player + "HealthText");
+
+    // Get current health value
+    var currentHealth = parseInt(healthText.textContent);
+
+    // Calculate new health value
+    var newHealth = currentHealth + healthChange;
+
+    // Calculate the width of the health bar based on the new health value
+    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 300px
+
+    // Update health text
+    healthText.textContent = newHealth;
+
+    // Update health bar width
+    healthBar.style.width = healthBarWidth + "px";
+
 }
 function endTurn() {
     // Increment turn counter
@@ -78,39 +112,4 @@ function updateEnergyCounter() {
     }
     var roundedEnergyCount = Math.floor(energyCount);
     document.getElementById("energyCount").textContent = roundedEnergyCount;
-}
-
-// Function to apply damage
-function determineDamage(player1Choice, player2Choice) {
-    if (player1Choice === "punch") {
-        updateHealth("player2", -12);
-        return "player1 used punch!";
-    } else if (player2Choice === "punch") {
-        updateHealth("player1", -12);
-        return "Player 2 used punch!";
-    } else {
-        return "No damage is done.";
-    }
-}
-
-// Function to update health bars and their text
-function updateHealth(player, healthChange) {
-    var healthBar = document.getElementById(player + "Health");
-    var healthText = document.getElementById(player + "HealthText");
-
-    // Get current health value
-    var currentHealth = parseInt(healthText.textContent);
-
-    // Calculate new health value
-    var newHealth = currentHealth + healthChange;
-
-    // Calculate the width of the health bar based on the new health value
-    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 300px
-
-    // Update health text
-    healthText.textContent = newHealth;
-
-    // Update health bar width
-    healthBar.style.width = healthBarWidth + "px";
-
 }
