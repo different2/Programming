@@ -61,10 +61,8 @@ function determineDamage(player1Choice, player2Choice) {
 }
 
 function endTurn() {
-    // Increment turn counter
     updateTurnCounter();
     
-    // Update energy counter
     updateEnergyCounter();
 
     // Subtract pending damage from health bars
@@ -99,25 +97,40 @@ function updateHealth(player, healthChange) {
     var healthBar = document.getElementById(player + "Health");
     var healthText = document.getElementById(player + "HealthText");
     var pendingDamageBar = document.getElementById(player + "PendingDamage");
+
+    // Get current health value
     var currentHealth = parseInt(healthText.textContent);
 
-    // Calculate new health value
-    var newHealth = currentHealth + healthChange;
+   // Calculate new health value
+    var newHealth = currentHealth - pendingDamage[player];
 
     // Calculate the width of the health bar based on the new health value
-    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 100; // Assuming total health is 150 and health bar width is 100%
+    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 150px
 
-    // Calculate the width of the pending damage bar based on the pending damage
-    var pendingDamageWidth = Math.max(0, -healthChange / 150) * 100; // Assuming total health is 150 and health bar width is 100%
+    // Calculate the width of the pending damage bar based on pending damage
+    var pendingDamageWidth = (pendingDamage[player] / 150) * 150; // Convert pending damage to a width in px
 
     // Update health text
     healthText.textContent = newHealth;
 
     // Update health bar width
-    healthBar.style.width = healthBarWidth + "%";
+    healthBar.style.width = healthBarWidth + "px";
 
-    // Update pending damage bar width
-    pendingDamageBar.style.width = pendingDamageWidth + "%";
+    // Update pending damage bar width and position
+    if (pendingDamage[player] <= newHealth) {
+        pendingDamageBar.style.width = pendingDamageWidth + "px";
+    } else {
+        pendingDamageBar.style.width = healthBarWidth + "px";
+    }
+    pendingDamageBar.style.left = healthBar.style.width;
+
+    // Logging for debugging
+    console.log("Current Health:", currentHealth);
+    console.log("Health Change:", healthChange);
+    console.log("Pending Damage:", pendingDamage[player]);
+    console.log("Total Health Change:", newHealth);
+    console.log("Health Bar Width:", healthBarWidth);
+    console.log("Pending Damage Bar Width:", pendingDamageWidth);
 }
 
 // Function to update turn counter
