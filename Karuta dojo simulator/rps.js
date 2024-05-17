@@ -1,8 +1,5 @@
 // Global variables for turn and energy counters
-var pendingDamage = {
-    player1: 0,
-    player2: 0
-};
+var pendingDamage = { player1: 0, player2: 0 };
 var player1PunchCount = 0;
 var player2PunchCount = 0;
 var turnCount = 0;
@@ -101,22 +98,26 @@ function endTurn() {
 function updateHealth(player, healthChange) {
     var healthBar = document.getElementById(player + "Health");
     var healthText = document.getElementById(player + "HealthText");
-
-    // Get current health value
+    var pendingDamageBar = document.getElementById(player + "PendingDamage");
     var currentHealth = parseInt(healthText.textContent);
 
     // Calculate new health value
     var newHealth = currentHealth + healthChange;
 
     // Calculate the width of the health bar based on the new health value
-    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 150px
+    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 100; // Assuming total health is 150 and health bar width is 100%
+
+    // Calculate the width of the pending damage bar based on the pending damage
+    var pendingDamageWidth = Math.max(0, -healthChange / 150) * 100; // Assuming total health is 150 and health bar width is 100%
 
     // Update health text
     healthText.textContent = newHealth;
 
     // Update health bar width
-    healthBar.style.width = healthBarWidth + "px";
+    healthBar.style.width = healthBarWidth + "%";
 
+    // Update pending damage bar width
+    pendingDamageBar.style.width = pendingDamageWidth + "%";
 }
 
 // Function to update turn counter

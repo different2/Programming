@@ -1,22 +1,30 @@
-        .health-bar {
-            width: 150px; /* Adjust width as needed */
-            height: 20px; /* Adjust height as needed */
-            border: 1px solid #000;
-            background-color: #f0f0f0;
-            position: relative;
-            margin-top: 10px; /* Adjust margin as needed */
-        }
+.health-bar {
+    width: 150px; /* Adjust width as needed */
+    height: 20px; /* Adjust height as needed */
+    border: 1px solid #000;
+    background-color: #f0f0f0;
+    position: relative;
+    margin-top: 10px; /* Adjust margin as needed */
+}
 
-        .health {
-            height: 100%;
-            width: 150%; /* Adjusted width for 150 health points */
-            max-width: 100%; /* Limit width to 100% of parent (.health-bar) */
-            background-color: #4caf50; /* Adjust color for healthy state */
-        }
-         /* Style for the health bar numbers */
-         .health-number {
-            position: absolute;
-            top: 0;
-            right: -30px;
-            line-height: 20px; /* Adjust line height to vertically center text */
-        }
+.health {
+    height: 100%;
+    width: 150%; /* Adjusted width for 150 health points */
+    max-width: 100%; /* Limit width to 100% of parent (.health-bar) */
+    background-color: #4caf50; /* Adjust color for healthy state */
+}
+.pending-damage {
+    position: absolute; /* Position the pending damage bar absolutely */
+    top: 0;
+    right: 0;
+    height: 100%;
+    background-color: red; /* Red color for pending damage */
+}
+
+ /* Style for the health bar numbers */
+ .health-number {
+    position: absolute;
+    top: 0;
+    right: -30px;
+    line-height: 20px; /* Adjust line height to vertically center text */
+}
