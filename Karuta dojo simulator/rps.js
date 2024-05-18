@@ -1,5 +1,6 @@
 // Global variables for turn and energy counters
 var pendingDamage = { player1: 0, player2: 0 };
+var totalPendingDamage = { player1: 0, player2: 0 };
 var totalDamage = { player1: 0, player2: 0 };
 var blockingDamage = { player1: 0, player2: 0 };
 var player1PunchCount = 0;
@@ -42,8 +43,8 @@ function usePlayer2() {
 // Function to apply damage
 function determineDamage(player1Choice, player2Choice) {
     if (player1Choice === "punch") {
-        pendingDamage.player2 += 12;
-        totalDamage.player2 += 12;
+        pendingDamage.player2 += 60;
+        totalDamage.player2 += 60;
         console.log("Pending damage to player 2:", pendingDamage.player2);
         updateHealth("player2", -pendingDamage.player2);
         pendingDamage.player2 = 0;
@@ -63,8 +64,8 @@ function determineDamage(player1Choice, player2Choice) {
         blockingDamage.player1 = 0;
         return "Player 1 used block!";
     } else if (player2Choice === "block") {
-        blockingDamage.player2 += 9; // Track blocking damage
-        totalDamage.player2 -= 9;
+        blockingDamage.player2 += 30; // Track blocking damage
+        totalDamage.player2 -= 30;
         console.log("block damage to player 2:", totalDamage.player2);
         updateHealth("player2", +blockingDamage.player2);
         blockingDamage.player2 = 0;
@@ -126,6 +127,9 @@ function updateHealth(player, healthChange) {
     // Get current health value
     var currentHealth = parseInt(healthText.textContent);
 
+    // Add pending damage to total pending damage
+    totalPendingDamage[player] += pendingDamage[player];
+
    // Calculate new health value
     var newHealth = currentHealth - (pendingDamage[player] - blockingDamage[player]);
 
@@ -157,6 +161,7 @@ function updateHealth(player, healthChange) {
     console.log("Current Health:", currentHealth);
     console.log("Health Change:", healthChange);
     console.log("Pending Damage:", pendingDamage[player]);
+    console.log("total pending damage:", totalPendingDamage[player]);
     console.log("Total Damage:", totalDamage[player]);
     console.log("New Health:", newHealth);
     console.log("Health Bar Width:", healthBarWidth);
