@@ -1,6 +1,7 @@
 // Global variables for turn and energy counters
 var pendingDamage = { player1: 0, player2: 0 };
-var TotalDamage = { player1: 0, player2: 0 };
+var totalDamage = { player1: 0, player2: 0 };
+var blockingDamage = { player1: 0, player2: 0 };
 var player1PunchCount = 0;
 var player2PunchCount = 0;
 var turnCount = 0;
@@ -42,30 +43,35 @@ function usePlayer2() {
 function determineDamage(player1Choice, player2Choice) {
     if (player1Choice === "punch") {
         pendingDamage.player2 += 12;
-        TotalDamage.player2 += 12;
+        totalDamage.player2 += 12;
         console.log("Pending damage to player 2:", pendingDamage.player2);
         updateHealth("player2", -pendingDamage.player2);
         pendingDamage.player2 = 0;
         return "player1 used punch!";
     } else if (player2Choice === "punch") {
         pendingDamage.player1 += 12;
-        TotalDamage.player1 += 12;
+        totalDamage.player1 += 12;
         console.log("Pending damage to player 1:", pendingDamage.player1);
         updateHealth("player1", -pendingDamage.player1);
         pendingDamage.player1 = 0;
         return "Player 2 used punch!";
     } else if (player1Choice === "block") {
-        // Player 1 chooses to block, reduce pending damage to player 1 by 9
-        TotalDamage.player1 = Math.max(TotalDamage.player1 - 9, 0);
-        console.log("Pending damage to player 1 after block:", TotalDamage.player1);
+        blockingDamage.player1 += 9; // Track blocking damage
+        totalDamage.player1 -= 9;
+        console.log("block damage to player 1:", totalDamage.player1);
+        updateHealth("player1", +blockingDamage.player1);
+        blockingDamage.player1 = 0;
         return "Player 1 used block!";
     } else if (player2Choice === "block") {
-        // Player 2 chooses to block, reduce pending damage to player 2 by 9
-        TotalDamage.player2 = Math.max(TotalDamage.player2 - 9, 0);
-        console.log("Pending damage to player 2 after block:", TotalDamage.player2);
+        blockingDamage.player2 += 9; // Track blocking damage
+        totalDamage.player2 -= 9;
+        console.log("block damage to player 2:", totalDamage.player2);
+        updateHealth("player2", +blockingDamage.player2);
+        blockingDamage.player2 = 0;
         return "Player 2 used block!";
     }
 }
+
 
 function endTurn() {
 
@@ -75,15 +81,15 @@ function endTurn() {
     updateEnergyCounter();
 
     // Subtract pending damage from health bars
-    updateHealth("player1", -TotalDamage.player1);
-    updateHealth("player2", -TotalDamage.player2);
+    updateHealth("player1", -totalDamage.player1);
+    updateHealth("player2", -totalDamage.player2);
 
     // Clear pending damage bars
     resetPendingDamageBars();
 
     // Reset pending damage
-    TotalDamage.player1 = 0;
-    TotalDamage.player2 = 0;
+    totalDamage.player1 = 0;
+    totalDamage.player2 = 0;
 
     // Reset punch counts for both players
     player1PunchCount = 0;
@@ -121,13 +127,17 @@ function updateHealth(player, healthChange) {
     var currentHealth = parseInt(healthText.textContent);
 
    // Calculate new health value
-    var newHealth = currentHealth - pendingDamage[player];
+    var newHealth = currentHealth - (pendingDamage[player] - blockingDamage[player]);
+
+    // Ensure health stays within 0-100 range
+    newHealth = Math.min(150, newHealth);
+
 
     // Calculate the width of the health bar based on the new health value
     var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 150px
 
     // Calculate the width of the pending damage bar based on pending damage
-    var pendingDamageWidth = ((TotalDamage[player] >= 0 ? TotalDamage[player] : 0) / 150) * 150; // Convert pending damage to a width in px
+    var pendingDamageWidth = ((totalDamage[player] >= 0 ? totalDamage[player] : 0) / 150) * 150; // Convert pending damage to a width in px
 
     // Update health text
     healthText.textContent = newHealth;
@@ -136,7 +146,7 @@ function updateHealth(player, healthChange) {
     healthBar.style.width = healthBarWidth + "px";
 
     // Update pending damage bar width and position
-    if (TotalDamage[player] <= newHealth) {
+    if (totalDamage[player] <= newHealth) {
         pendingDamageBar.style.width = pendingDamageWidth + "px";
     } else {
         pendingDamageBar.style.width = healthBarWidth + "px";
@@ -147,9 +157,8 @@ function updateHealth(player, healthChange) {
     console.log("Current Health:", currentHealth);
     console.log("Health Change:", healthChange);
     console.log("Pending Damage:", pendingDamage[player]);
-    console.log("Total Damage:", TotalDamage[player]);
+    console.log("Total Damage:", totalDamage[player]);
     console.log("New Health:", newHealth);
-    console.log("Total Health Change:", newHealth);
     console.log("Health Bar Width:", healthBarWidth);
     console.log("Pending Damage Bar Width:", pendingDamageWidth);
 }
