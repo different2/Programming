@@ -1,0 +1,6 @@
+.health-number {
+    position: relative;
+    top: 0;
+    right: -110px;
+    line-height: 20px; /* Adjust line height to vertically center text */
+}
