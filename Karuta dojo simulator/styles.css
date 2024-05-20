@@ -7,7 +7,7 @@
     margin-top: 10px; /* Adjust margin as needed */
 }
 
-.health {
+.health-green {
     height: 100%;
     width: 150%; /* Adjusted width for 150 health points */
     max-width: 100%; /* Limit width to 100% of parent (.health-bar) */
@@ -27,6 +27,6 @@
  .health-number {
     position: absolute;
     top: 0;
-    right: -30px;
+    right: -120px;
     line-height: 20px; /* Adjust line height to vertically center text */
 }

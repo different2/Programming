@@ -18,11 +18,9 @@ function use() {
 function updateHealth() {
     var healthText = document.getElementById("playerHealthText");
 
-    var currentHealth = parseInt(healthText.textContent.split('/')[0].replace('→', ''));
-    var newHealth = currentHealth - playerDamage;
+    var oldHealth = parseInt(healthText.textContent.split('/')[0].replace('→', ''));
+    var newHealth = oldHealth - playerDamage;
     
-    var healthDisplay = `${currentHealth}<span class="arrow">&#8594;</span> ${newHealth}/${maxHealth}`;
-
-    healthText.innerHTML = healthDisplay;
+    healthText.innerHTML = `${oldHealth}<span class="arrow">&#8594;</span> ${newHealth}/${maxHealth}`;
 
 }
