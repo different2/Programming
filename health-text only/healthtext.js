@@ -10,7 +10,7 @@ function() {
 
 function use() {
     playerDamage += 60;
-    console.log("Pending damage to player 2:", playerDamage);
+    console.log("Incoming damage to player 2:", playerDamage);
     updateHealth("player2", -playerDamage);
 }
 
@@ -24,8 +24,5 @@ function updateHealth() {
     var healthDisplay = `${currentHealth}<span class="arrow">&#8594;</span> ${newHealth}/${maxHealth}`;
 
     healthText.innerHTML = healthDisplay;
-
-
-console.log("maxHealth:", maxHealth);
 
 }

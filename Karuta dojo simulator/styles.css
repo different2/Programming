@@ -14,12 +14,12 @@
     background-color: #4caf50; /* Adjust color for healthy state */
     z-index: 1;
 }
-.pending-damage {
-    position: absolute; /* Position the pending damage bar absolutely */
+.incoming-damage {
+    position: absolute; /* Position the incoming damage bar absolutely */
     top: 0;
     right: 0;
     height: 100%;
-    background-color: red; /* Red color for pending damage */
+    background-color: red; /* Red color for incoming damage */
     z-index: 2;
 }
 

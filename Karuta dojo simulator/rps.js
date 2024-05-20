@@ -1,7 +1,7 @@
 // Global variables for turn and energy counters
-var pendingDamage = { player1: 0, player2: 0 };
-var totalDamage = { player1: 0, player2: 0 };
+var incomingDamage = { player1: 0, player2: 0 };
 var blockingDamage = { player1: 0, player2: 0 };
+var playerDamage = { player1: 0, player2: 0};
 var player1PunchCount = 0;
 var player2PunchCount = 0;
 var turnCount = 0;
@@ -42,30 +42,30 @@ function usePlayer2() {
 // Function to apply damage
 function determineDamage(player1Choice, player2Choice) {
     if (player1Choice === "punch") {
-        pendingDamage.player2 += 12;
-        totalDamage.player2 += 12;
-        console.log("Pending damage to player 2:", pendingDamage.player2);
-        updateHealth("player2", -pendingDamage.player2);
-        pendingDamage.player2 = 0;
+        incomingDamage.player2 += 12;
+        playerDamage.player2 += 12;
+        console.log("Incoming damage to player 2:", incomingDamage.player2);
+        updateHealth("player2", -incomingDamage.player2);
+        incomingDamage.player2 = 0;
         return "player1 used punch!";
     } else if (player2Choice === "punch") {
-        pendingDamage.player1 += 12;
-        totalDamage.player1 += 12;
-        console.log("Pending damage to player 1:", pendingDamage.player1);
-        updateHealth("player1", -pendingDamage.player1);
-        pendingDamage.player1 = 0;
+        incomingDamage.player1 += 12;
+        playerDamage.player1 += 12;
+        console.log("Incoming damage to player 1:", incomingDamage.player1);
+        updateHealth("player1", -incomingDamage.player1);
+        incomingDamage.player1 = 0;
         return "Player 2 used punch!";
     } else if (player1Choice === "block") {
         blockingDamage.player1 += 9; // Track blocking damage
-        totalDamage.player1 -= 9;
-        console.log("block damage to player 1:", totalDamage.player1);
+        playerDamage.player1 -= 9;
+        console.log("block damage to player 1:", playerDamage.player1);
         updateHealth("player1", +blockingDamage.player1);
         blockingDamage.player1 = 0;
         return "Player 1 used block!";
     } else if (player2Choice === "block") {
         blockingDamage.player2 += 9; // Track blocking damage
-        totalDamage.player2 -= 9;
-        console.log("block damage to player 2:", totalDamage.player2);
+        playerDamage.player2 -= 9;
+        console.log("block damage to player 2:", playerDamage.player2);
         updateHealth("player2", +blockingDamage.player2);
         blockingDamage.player2 = 0;
         return "Player 2 used block!";
@@ -80,16 +80,12 @@ function endTurn() {
     
     updateEnergyCounter();
 
-    // Subtract pending damage from health bars
-    updateHealth("player1", -totalDamage.player1);
-    updateHealth("player2", -totalDamage.player2);
+    // Subtract incoming damage from health bars
+    updateHealth("player1", -playerDamage.player1);
+    updateHealth("player2", -playerDamage.player2);
 
-    // Clear pending damage bars
-    resetPendingDamageBars();
-
-    // Reset pending damage
-    totalDamage.player1 = 0;
-    totalDamage.player2 = 0;
+    // Clear incoming damage bars
+    resetDamageBars();
 
     // Reset punch counts for both players
     player1PunchCount = 0;
@@ -110,9 +106,9 @@ function endTurn() {
 
 }
 
-function resetPendingDamageBars() {
-    var pendingDamageBars = document.querySelectorAll('.pending-damage');
-    pendingDamageBars.forEach(bar => {
+function resetDamageBars() {
+    var damageBars = document.querySelectorAll('.incoming-damage');
+    damageBars.forEach(bar => {
         bar.style.width = '0px';
     });
 }
@@ -121,13 +117,13 @@ function resetPendingDamageBars() {
 function updateHealth(player, healthChange) {
     var healthBar = document.getElementById(player + "Health");
     var healthText = document.getElementById(player + "HealthText");
-    var pendingDamageBar = document.getElementById(player + "PendingDamage");
+    var incomingDamageBar = document.getElementById(player + "IncomingDamage");
 
     // Get current health value
     var currentHealth = parseInt(healthText.textContent);
 
    // Calculate new health value
-    var newHealth = currentHealth - (pendingDamage[player] - blockingDamage[player]);
+    var newHealth = currentHealth - (incomingDamage[player] - blockingDamage[player]);
 
     // Ensure health stays within 0-100 range
     newHealth = Math.min(150, newHealth);
@@ -136,8 +132,8 @@ function updateHealth(player, healthChange) {
     // Calculate the width of the health bar based on the new health value
     var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 150px
 
-    // Calculate the width of the pending damage bar based on pending damage
-    var pendingDamageWidth = ((totalDamage[player] >= 0 ? totalDamage[player] : 0) / 150) * 150; // Convert pending damage to a width in px
+    // Calculate the width of the damage bar based on incoming damage
+    var damageBarWidth = ((playerDamage[player] >= 0 ? playerDamage[player] : 0) / 150) * 150; // Convert incoming damage to a width in px
 
     // Update health text
     healthText.textContent = newHealth;
@@ -145,22 +141,22 @@ function updateHealth(player, healthChange) {
     // Update health bar width
     healthBar.style.width = healthBarWidth + "px";
 
-    // Update pending damage bar width and position
-    if (totalDamage[player] <= newHealth) {
-        pendingDamageBar.style.width = pendingDamageWidth + "px";
+    // Update incoming damage bar width and position
+    if (playerDamage[player] <= newHealth) {
+        incomingDamageBar.style.width = damageBarWidth + "px";
     } else {
-        pendingDamageBar.style.width = healthBarWidth + "px";
+        incomingDamageBar.style.width = healthBarWidth + "px";
     }
-    pendingDamageBar.style.left = healthBar.style.width;
+    incomingDamageBar.style.left = healthBar.style.width;
 
     // Logging for debugging
     console.log("Current Health:", currentHealth);
     console.log("Health Change:", healthChange);
-    console.log("Pending Damage:", pendingDamage[player]);
-    console.log("Total Damage:", totalDamage[player]);
+    console.log("Incoming Damage:", incomingDamage[player]);
+    console.log("Player Damage:", playerDamage[player]);
     console.log("New Health:", newHealth);
     console.log("Health Bar Width:", healthBarWidth);
-    console.log("Pending Damage Bar Width:", pendingDamageWidth);
+    console.log("Incoming Damage Bar Width:", damageBarWidth);
 }
 
 // Function to update turn counter
