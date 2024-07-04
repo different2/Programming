@@ -8,8 +8,10 @@
     <body>
         <h1>Health text only</h1>
         <button type="button" id="useButton" onclick="use()">Use</button>
+        <button type="button" onclick="endTurn()">End Turn</button>
         <p id="displayText"></p>
-        <div>
+        <div class="health-bar">
+            <div class="health-green" id="HealthBar"></div>
             <span class="health-number" id="playerHealthText"><span class="arrow"></span>150/150</span>
         </div>
         <script src="healthtext.js"></script>

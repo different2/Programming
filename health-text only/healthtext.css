@@ -1,6 +1,24 @@
+.health-bar {
+    width: 150px; /* Adjust width as needed */
+    height: 20px; /* Adjust height as needed */
+    border: 1px solid #000;
+    background-color: #f0f0f0;
+    position: relative;
+    margin-top: 10px; /* Adjust margin as needed */
+}
+
+.health-green {
+    height: 100%;
+    width: 150%; /* Adjusted width for 150 health points */
+    max-width: 100%; /* Limit width to 100% of parent (.health-bar) */
+    background-color: #4caf50; /* Adjust color for healthy state */
+    z-index: 1;
+}
+
 .health-number {
     position: relative;
     top: 0;
     right: -110px;
     line-height: 20px; /* Adjust line height to vertically center text */
 }
+

@@ -1,11 +1,12 @@
-// Global variables for turn and energy counters
-var incomingDamage = { player1: 0, player2: 0 };
-var playerDamage = { player1: 0, player2: 0};
-var player1PunchCount = 0;
-var player2PunchCount = 0;
-var turnCount = 0;
-var energyCount = 1;
+// Global variables
+let incomingDamage = { player1: 0, player2: 0 };
+let playerDamage = { player1: 0, player2: 0};
+let player1PunchCount = 0;
+let player2PunchCount = 0;
+let turnCount = 0;
+let energyCount = 1;
 let maxHealth = 150;
+let currentHealth = maxHealth;
 
 function usePlayer1() {
     // Check if player 1 has reached the maximum number of punch actions
@@ -13,10 +14,10 @@ function usePlayer1() {
         // Increment player 1's punch count
         player1PunchCount++;
         // Get player choices
-        var player1Choice = document.getElementById("player1Choice").value;
+        let player1Choice = document.getElementById("player1Choice").value;
 
          // Determine the damage and display result
-         var result = determineDamage(player1Choice, player2Choice);
+         let result = determineDamage(player1Choice, player2Choice);
         document.getElementById("result").innerHTML = result;
 
         if (player1PunchCount === 3) {
@@ -30,8 +31,8 @@ function usePlayer2() {
         // Increment player 2's punch count
         player2PunchCount++;
         
-        var player2Choice = document.getElementById("player2Choice").value;
-        var result = determineDamage(player1Choice, player2Choice);
+        let player2Choice = document.getElementById("player2Choice").value;
+        let result = determineDamage(player1Choice, player2Choice);
     document.getElementById("result").innerHTML = result;
      // Disable the "Use" button for player 2 if the maximum limit is reached
         if (player2PunchCount === 3) {
@@ -56,19 +57,21 @@ function determineDamage(player1Choice, player2Choice) {
         playerDamage.player1 = 0;
         return "Player 2 used punch!";
     } else if (player1Choice === "block") {
-        incomingDamage.player1 -= 9;
-        playerDamage.player1 -= 9;
-        console.log("block damage to player 1:", playerDamage.player1);
+        let blockAmount = Math.min(9, incomingDamage.player1);
+        incomingDamage.player1 -= blockAmount;
+        playerDamage.player1 -= blockAmount;
+        console.log("Player 1 blocked:", blockAmount);
         updateHealth("player1", +incomingDamage.player1);
         playerDamage.player1 = 0;
         return "Player 1 used block!";
     } else if (player2Choice === "block") {
-        incomingDamage.player2 -= 9;
-        playerDamage.player2 -= 9;
-        console.log("block damage to player 2:", playerDamage.player2);
+        let blockAmount = Math.min(9, incomingDamage.player2);
+        incomingDamage.player2 -= blockAmount;
+        playerDamage.player2 -= blockAmount;
+        console.log("Player 2 blocked:", blockAmount);
         updateHealth("player2", +incomingDamage.player2);
         playerDamage.player2 = 0;
-        return "Player 2 used block!";
+        return "Player 1 used block!";
     }
 }
 
@@ -83,31 +86,34 @@ function endTurn() {
     // Subtract incoming damage from health bars
     updateHealth("player1", -incomingDamage.player1);
     updateHealth("player2", -incomingDamage.player2);
-
+    currentHealth -= incomingDamage.player1;
+    currentHealth -= incomingDamage.player2;
+    console.log("currentHealth:",  currentHealth);
     // Clear incoming damage bars
     resetDamageBars();
 
     // Reset punch counts for both players
     player1PunchCount = 0;
     player2PunchCount = 0;
+
     // Enable the "Use" buttons for both players
     document.getElementById("useButtonPlayer1").disabled = false;
     document.getElementById("useButtonPlayer2").disabled = false;
 
     // Check if any player's health has reached zero
-    var player1Health = parseInt(document.getElementById("player1HealthText").textContent);
-    var player2Health = parseInt(document.getElementById("player2HealthText").textContent);
+    let player1Health = parseInt(document.getElementById("player1HealthText").textContent);
+    let player2Health = parseInt(document.getElementById("player2HealthText").textContent);
     console.log("Player 1 Health: " + player1Health + ", Player 2 Health: " + player2Health);
     if (player1Health <= 0) {
         document.getElementById("result").innerHTML = "Player 2 wins! Player 1's health reached zero.";
     } else if (player2Health <= 0) {
         document.getElementById("result").innerHTML = "Player 1 wins! Player 2's health reached zero.";
     }
-
+console.log("result:", result);
 }
 
 function resetDamageBars() {
-    var damageBars = document.querySelectorAll('.incoming-damage');
+    let damageBars = document.querySelectorAll('.incoming-damage');
     damageBars.forEach(bar => {
         bar.style.width = '0px';
     });
@@ -115,41 +121,42 @@ function resetDamageBars() {
 
 // Function to update health bars and their text
 function updateHealth(player) {
-    var healthBar = document.getElementById(player + "HealthBar");
-    var healthText = document.getElementById(player + "HealthText");
-    var incomingDamageBar = document.getElementById(player + "IncomingDamage");
+    let healthBar = document.getElementById(player + "HealthBar");
+    let healthText = document.getElementById(player + "HealthText");
+    let incomingDamageBar = document.getElementById(player + "IncomingDamage");
 
     // Get old health value
-    var oldHealth = parseInt(healthText.textContent.split('/')[0].replace('→', ''));
+    let oldHealth = parseInt(healthText.textContent.split('/')[0].replace('→', ''));
 
    // Calculate new health value
-    var newHealth = oldHealth - incomingDamage[player];
+    let newHealth = oldHealth - incomingDamage[player];
 
-       // Ensure health stays within 0-100 range
-       newHealth = Math.min(150, newHealth);
+    // Ensure health stays within 0-150 range
+    newHealth = Math.min(maxHealth, Math.max(newHealth));
 
-    healthText.innerHTML = `${oldHealth}<span class="arrow">&#8594;</span> ${newHealth}/${maxHealth}`;
-
-
- 
-
+    healthText.innerHTML = `${currentHealth}<span class="arrow">&#8594;</span> ${newHealth}/${maxHealth}`;
 
     // Calculate the width of the health bar based on the new health value
-    var healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150; // Assuming total health is 150 and health bar width is 150px
+    let healthBarWidth = ((newHealth >= 0 ? newHealth : 0) / 150) * 150;
 
-    // Calculate the width of the damage bar based on incoming damage
-    var damageBarWidth = ((incomingDamage[player] >= 0 ? incomingDamage[player] : 0) / 150) * 150; // Convert incoming damage to a width in px
 
-    // Update health bar width
-    healthBar.style.width = healthBarWidth + "px";
 
-    // Update incoming damage bar width and position
-    if (incomingDamage[player] <= newHealth) {
-        incomingDamageBar.style.width = damageBarWidth + "px";
-    } else {
-        incomingDamageBar.style.width = healthBarWidth + "px";
-    }
-    incomingDamageBar.style.left = healthBar.style.width;
+      // Calculate the width of the damage bar based on incoming damage
+      let damageBarWidth = ((incomingDamage[player] >= 0 ? incomingDamage[player] : 0) / 150) * 150; // Convert incoming damage to a width in px
+
+      // Update health bar width
+      healthBar.style.width = healthBarWidth + "px";
+  
+      // Update incoming damage bar width and position
+      if (incomingDamage[player] <= newHealth) {
+          incomingDamageBar.style.width = damageBarWidth + "px";
+      } else {
+          incomingDamageBar.style.width = healthBarWidth + "px";
+      }
+      incomingDamageBar.style.left = healthBar.style.width;
+
+
+   
 
     // Logging for debugging
     console.log("old Health:", oldHealth);
@@ -158,6 +165,9 @@ function updateHealth(player) {
     console.log("New Health:", newHealth);
     console.log("Health Bar Width:", healthBarWidth);
     console.log("Incoming Damage Bar Width:", damageBarWidth);
+    console.log("healthBar.style.width:",   healthBar.style.width);
+    console.log("healthText.textContent:",  healthText.textContent);
+    console.log("healthText.innerHTML:",   healthText.innerHTML);
 }
 
 // Function to update turn counter
@@ -175,6 +185,6 @@ function updateEnergyCounter() {
             energyCount += 1;
         }
     }
-    var roundedEnergyCount = Math.floor(energyCount);
+    let roundedEnergyCount = Math.floor(energyCount);
     document.getElementById("energyCount").textContent = roundedEnergyCount;
 }

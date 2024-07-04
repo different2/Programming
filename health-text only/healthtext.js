@@ -1,5 +1,6 @@
-var playerDamage = 0;
+let playerDamage = 0;
 let maxHealth = 150;
+let currentHealth = maxHealth;
 
 document.getElementById("useButton").addEventListener("click", 
 function() {
@@ -9,18 +10,43 @@ function() {
 
 
 function use() {
-    playerDamage += 60;
-    console.log("Incoming damage to player 2:", playerDamage);
-    updateHealth("player2", -playerDamage);
+    playerDamage += 12;
+    console.log("Incoming damage to player:", playerDamage);
+   
+}
+function endTurn() {
+    updateHealth("player", -playerDamage.player);
+    currentHealth -= playerDamage;
+    playerDamage = 0;
+    console.log("currentHealth:", currentHealth);
 }
 
 
 function updateHealth() {
-    var healthText = document.getElementById("playerHealthText");
+    let healthBar = document.getElementById("HealthBar");
+    let healthText = document.getElementById("playerHealthText");
 
-    var oldHealth = parseInt(healthText.textContent.split('/')[0].replace('→', ''));
-    var newHealth = oldHealth - playerDamage;
+    let Health = Math.min(maxHealth-playerDamage,maxHealth);
+
+    let newHealth = Health - playerDamage;
+ 
+    let healthBarWidth = (newHealth / maxHealth) * 100;
+
+    if (playerDamage > 0) {
+        healthText.innerHTML = `${currentHealth}<span class="arrow">&#8594;</span> ${newHealth}/${maxHealth}`;
+        console.log("healthText.innerHTML:",   healthText.innerHTML);
+    } else {
+ 
+        healthText.innerHTML = `${newHealth}/${maxHealth}`;
+        console.log("healthText.innerHTML:",   healthText.innerHTML);
+    }
+
     
-    healthText.innerHTML = `${oldHealth}<span class="arrow">&#8594;</span> ${newHealth}/${maxHealth}`;
+    healthBar.style.width = healthBarWidth + "%";
+
+
+console.log("healthBar.style.width:", healthBar.style.width);
+console.log("healthText.textContent:", healthText.textContent);
+
 
 }
