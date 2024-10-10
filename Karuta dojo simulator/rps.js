@@ -86,9 +86,9 @@ function endTurn() {
     // Subtract incoming damage from health bars
     updateHealth("player1", -incomingDamage.player1);
     updateHealth("player2", -incomingDamage.player2);
-    currentHealth -= incomingDamage.player1;
-    currentHealth -= incomingDamage.player2;
-    console.log("currentHealth:",  currentHealth);
+   // currentHealth -= incomingDamage.player1;
+   // currentHealth -= incomingDamage.player2;
+    //console.log("currentHealth:",  currentHealth);
     // Clear incoming damage bars
     resetDamageBars();
 
@@ -125,11 +125,10 @@ function updateHealth(player) {
     let healthText = document.getElementById(player + "HealthText");
     let incomingDamageBar = document.getElementById(player + "IncomingDamage");
 
-    // Get old health value
-    let oldHealth = parseInt(healthText.textContent.split('/')[0].replace('→', ''));
+
 
    // Calculate new health value
-    let newHealth = oldHealth - incomingDamage[player];
+    let newHealth = currentHealth - incomingDamage[player];
 
     // Ensure health stays within 0-150 range
     newHealth = Math.min(maxHealth, Math.max(newHealth));
@@ -159,7 +158,7 @@ function updateHealth(player) {
    
 
     // Logging for debugging
-    console.log("old Health:", oldHealth);
+    console.log("currentHealth:", currentHealth);
     console.log("Incoming Damage:", incomingDamage[player]);
     console.log("Player Damage:", playerDamage[player]);
     console.log("New Health:", newHealth);
