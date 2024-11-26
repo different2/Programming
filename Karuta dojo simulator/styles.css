@@ -1,3 +1,7 @@
+body {
+    background-color: white
+}
+
 .health-bar {
     width: 150px; /* Adjust width as needed */
     height: 20px; /* Adjust height as needed */
